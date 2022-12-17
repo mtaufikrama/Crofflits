@@ -22,6 +22,7 @@ class _InputDataState extends State<InputData> {
   List<int> jumlah = [1];
   List<int> totalHargaSatuan = [0];
   List<int> hargaSatuan = [0];
+  List<int> hargaDouble = [0];
   int itemTopping = 1;
   bool tambahTopping = false;
 
@@ -47,53 +48,45 @@ class _InputDataState extends State<InputData> {
       'Blueberry',
     ];
     String waktu = DateFormat.yMd().format(DateTime.now());
-    return FutureBuilder<bool>(
-        future: localStorage,
-        builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+    List listPelanggan =
+        LocalStorage("dcroffle").getItem("pelanggan$waktu") ?? [];
+    List listWaktu = LocalStorage("dcroffle").getItem("waktu") ?? [];
+    List<dynamic> listsTopping =
+        LocalStorage("dcroffle").getItem("topping$waktu") ?? [];
+    List listJumlah = LocalStorage("dcroffle").getItem("jumlah$waktu") ?? [];
+    List listHarga = LocalStorage("dcroffle").getItem("harga$waktu") ?? [];
+    List listHargaPerorang =
+        LocalStorage("dcroffle").getItem("hargaPerorang$waktu") ?? [];
+    List listJumlahPerorang =
+        LocalStorage("dcroffle").getItem("jumlahPerorang$waktu") ?? [];
+    int totalHarga = LocalStorage("dcroffle").getItem("totalHarga$waktu") ?? 0;
+    int totalJumlah =
+        LocalStorage("dcroffle").getItem("totalJumlah$waktu") ?? 0;
+    List tambahanTopping =
+        LocalStorage("dcroffle").getItem("tambahTopping") ?? [];
+    if (tambahanTopping.isNotEmpty) {
+      menuTopping.addAll(tambahanTopping);
+    }
 
-          List listPelanggan =
-              LocalStorage("dcroffle").getItem("pelanggan$waktu") ?? [];
-          List listWaktu = LocalStorage("dcroffle").getItem("waktu") ?? [];
-          List<dynamic> listsTopping =
-              LocalStorage("dcroffle").getItem("topping$waktu") ?? [];
-          List listJumlah =
-              LocalStorage("dcroffle").getItem("jumlah$waktu") ?? [];
-          List listHarga =
-              LocalStorage("dcroffle").getItem("harga$waktu") ?? [];
-          List listHargaPerorang =
-              LocalStorage("dcroffle").getItem("hargaPerorang$waktu") ?? [];
-          List listJumlahPerorang =
-              LocalStorage("dcroffle").getItem("jumlahPerorang$waktu") ?? [];
-          int totalHarga =
-              LocalStorage("dcroffle").getItem("totalHarga$waktu") ?? 0;
-          int totalJumlah =
-              LocalStorage("dcroffle").getItem("totalJumlah$waktu") ?? 0;
-          List tambahanTopping =
-              LocalStorage("dcroffle").getItem("tambahTopping") ?? [];
-          if (tambahanTopping.isNotEmpty) {
-            menuTopping.addAll(tambahanTopping);
-          }
-
-          int totalharga = 0;
-          int jumlahCounter = 0;
-          for (int i = 0; i < totalHargaSatuan.length; i++) {
-            totalharga += totalHargaSatuan[i];
-            jumlahCounter += jumlah[i];
-          }
-          return SafeArea(
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  "INPUT DATA",
-                  style: GoogleFonts.asap(),
-                ),
-              ),
-              body: ListView(
+    int totalharga = 0;
+    int jumlahCounter = 0;
+    for (int i = 0; i < totalHargaSatuan.length; i++) {
+      totalharga += totalHargaSatuan[i];
+      jumlahCounter += jumlah[i];
+    }
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "INPUT DATA",
+            style: GoogleFonts.asap(),
+          ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
                 children: [
                   Container(
                     margin: const EdgeInsets.only(
@@ -131,22 +124,56 @@ class _InputDataState extends State<InputData> {
                     decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(15)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
                       children: [
-                        Text(
-                          "$jumlahCounter croffle",
-                          style: GoogleFonts.asap(
-                              fontSize: 20, color: Colors.white),
-                          overflow: TextOverflow.ellipsis,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "$jumlahCounter croffle",
+                              style: GoogleFonts.asap(
+                                  fontSize: 20, color: Colors.white),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              NumberFormat.currency(
+                                      symbol: 'Rp ', decimalDigits: 0)
+                                  .format(totalharga),
+                              style: GoogleFonts.asap(
+                                  fontSize: 20, color: Colors.white),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
-                        Text(
-                          NumberFormat.currency(symbol: 'Rp ', decimalDigits: 0)
-                              .format(totalharga),
-                          style: GoogleFonts.asap(
-                              fontSize: 20, color: Colors.white),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: checked.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                                leading: Text(
+                                  jumlah[index].toString(),
+                                  style: GoogleFonts.asap(color: Colors.white),
+                                ),
+                                title: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: checked[index].length,
+                                  itemBuilder: (context, indexCheck) {
+                                    return Text(
+                                      checked[index][indexCheck].toString(),
+                                      style:
+                                          GoogleFonts.asap(color: Colors.white),
+                                    );
+                                  },
+                                )
+                                // Text(
+                                //   checked[index].toString(),
+                                //   style: GoogleFonts.asap(color: Colors.white),
+                                // ),
+                                );
+                          },
+                        )
                       ],
                     ),
                   ),
@@ -158,6 +185,7 @@ class _InputDataState extends State<InputData> {
                       int counter = jumlah[indexItemTopping];
                       int totalhargasatuan = totalHargaSatuan[indexItemTopping];
                       int hargasatuan = hargaSatuan[indexItemTopping];
+                      int hargadouble = hargaDouble[indexItemTopping];
                       return Container(
                         padding: const EdgeInsets.all(10),
                         margin: const EdgeInsets.all(10),
@@ -211,8 +239,23 @@ class _InputDataState extends State<InputData> {
                                               jumlah.removeAt(indexItemTopping);
                                               jumlah.insert(
                                                   indexItemTopping, counter);
-                                              totalhargasatuan =
-                                                  hargasatuan * counter;
+                                              if (hargasatuan == 8000) {
+                                                print(hargadouble);
+                                                double jumlahin = (counter / 2)
+                                                        .truncateToDouble() *
+                                                    hargadouble;
+                                                double jumlahinaja =
+                                                    (counter % 2) *
+                                                        hargasatuan.toDouble();
+                                                totalhargasatuan =
+                                                    (jumlahin + jumlahinaja)
+                                                        .toInt();
+                                              } else if (hargasatuan == 6000) {
+                                                print(hargadouble);
+                                                print(hargasatuan);
+                                                totalhargasatuan =
+                                                    hargasatuan * counter;
+                                              }
                                               totalHargaSatuan
                                                   .removeAt(indexItemTopping);
                                               totalHargaSatuan.insert(
@@ -245,8 +288,22 @@ class _InputDataState extends State<InputData> {
                                             jumlah.removeAt(indexItemTopping);
                                             jumlah.insert(
                                                 indexItemTopping, counter);
-                                            totalhargasatuan =
-                                                hargasatuan * counter;
+                                            print(hargasatuan);
+                                            print(hargadouble);
+                                            if (hargasatuan == 8000) {
+                                              double jumlahin = (counter / 2)
+                                                      .truncateToDouble() *
+                                                  hargadouble;
+                                              double jumlahinaja =
+                                                  (counter % 2) *
+                                                      hargasatuan.toDouble();
+                                              totalhargasatuan =
+                                                  (jumlahin + jumlahinaja)
+                                                      .toInt();
+                                            } else if (hargasatuan == 6000) {
+                                              totalhargasatuan =
+                                                  hargasatuan * counter;
+                                            }
                                             totalHargaSatuan
                                                 .removeAt(indexItemTopping);
                                             totalHargaSatuan.insert(
@@ -267,7 +324,7 @@ class _InputDataState extends State<InputData> {
                             Padding(
                               padding: const EdgeInsets.all(15),
                               child: Text(
-                                "TOPPING ${indexItemTopping + 1}",
+                                "MENU ${indexItemTopping + 1}",
                                 style: GoogleFonts.asap(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -314,7 +371,7 @@ class _InputDataState extends State<InputData> {
                                           if (checked[indexItemTopping]
                                                   .contains(menuTopping[0]) ==
                                               true) {
-                                            hargasatuan = 5000;
+                                            hargasatuan = 6000;
                                             totalhargasatuan =
                                                 hargasatuan * counter;
                                             totalHargaSatuan
@@ -326,10 +383,21 @@ class _InputDataState extends State<InputData> {
                                                 .removeAt(indexItemTopping);
                                             hargaSatuan.insert(
                                                 indexItemTopping, hargasatuan);
+                                            hargaDouble
+                                                .removeAt(indexItemTopping);
+                                            hargaDouble.insert(
+                                                indexItemTopping, hargadouble);
                                           } else {
-                                            hargasatuan = 7000;
+                                            hargasatuan = 8000;
+                                            hargadouble = 15000;
+                                            double jumlahin = (counter / 2)
+                                                    .truncateToDouble() *
+                                                hargadouble;
+                                            double jumlahinaja = (counter % 2) *
+                                                hargasatuan.toDouble();
                                             totalhargasatuan =
-                                                hargasatuan * counter;
+                                                (jumlahin + jumlahinaja)
+                                                    .toInt();
                                             totalHargaSatuan
                                                 .removeAt(indexItemTopping);
                                             totalHargaSatuan.insert(
@@ -339,6 +407,10 @@ class _InputDataState extends State<InputData> {
                                                 .removeAt(indexItemTopping);
                                             hargaSatuan.insert(
                                                 indexItemTopping, hargasatuan);
+                                            hargaDouble
+                                                .removeAt(indexItemTopping);
+                                            hargaDouble.insert(
+                                                indexItemTopping, hargadouble);
                                           }
                                         });
                                       } else {
@@ -351,6 +423,7 @@ class _InputDataState extends State<InputData> {
                                             if (checked[indexItemTopping]
                                                 .isEmpty) {
                                               hargasatuan = 0;
+                                              hargadouble = 0;
                                               totalhargasatuan =
                                                   hargasatuan * counter;
                                               totalHargaSatuan
@@ -363,10 +436,23 @@ class _InputDataState extends State<InputData> {
                                               hargaSatuan.insert(
                                                   indexItemTopping,
                                                   hargasatuan);
+                                              hargaDouble
+                                                  .removeAt(indexItemTopping);
+                                              hargaDouble.insert(
+                                                  indexItemTopping,
+                                                  hargadouble);
                                             } else {
-                                              hargasatuan = 7000;
+                                              hargadouble = 15000;
+                                              hargasatuan = 8000;
+                                              double jumlahin = (counter / 2)
+                                                      .truncateToDouble() *
+                                                  hargadouble;
+                                              double jumlahinaja =
+                                                  (counter % 2) *
+                                                      hargasatuan.toDouble();
                                               totalhargasatuan =
-                                                  hargasatuan * counter;
+                                                  (jumlahin + jumlahinaja)
+                                                      .toInt();
                                               totalHargaSatuan
                                                   .removeAt(indexItemTopping);
                                               totalHargaSatuan.insert(
@@ -377,6 +463,11 @@ class _InputDataState extends State<InputData> {
                                               hargaSatuan.insert(
                                                   indexItemTopping,
                                                   hargasatuan);
+                                              hargaDouble
+                                                  .removeAt(indexItemTopping);
+                                              hargaDouble.insert(
+                                                  indexItemTopping,
+                                                  hargadouble);
                                             }
                                           }
                                         });
@@ -434,7 +525,7 @@ class _InputDataState extends State<InputData> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 5),
+                                const SizedBox(width: 5),
                                 Expanded(
                                   child: OutlinedButton(
                                     style: OutlinedButton.styleFrom(
@@ -460,13 +551,15 @@ class _InputDataState extends State<InputData> {
                       );
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                      right: 15,
-                      bottom: 100,
-                      top: 10,
-                    ),
+                ],
+              ),
+            ),
+            Container(
+              color: const Color.fromARGB(255, 217, 217, 217),
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Expanded(
                     child: MaterialButton(
                       color: Colors.red,
                       shape: RoundedRectangleBorder(
@@ -497,6 +590,22 @@ class _InputDataState extends State<InputData> {
                             print(
                                 "$listJumlah + $listsTopping + $listPelanggan + $listWaktu + $totalHarga");
                             await LocalStorage('dcroffle')
+                                .deleteItem('topping$waktu');
+                            await LocalStorage('dcroffle')
+                                .deleteItem('pelanggan$waktu');
+                            await LocalStorage('dcroffle')
+                                .deleteItem('jumlah$waktu');
+                            await LocalStorage('dcroffle')
+                                .deleteItem('jumlahPerorang$waktu');
+                            await LocalStorage('dcroffle')
+                                .deleteItem('harga$waktu');
+                            await LocalStorage('dcroffle')
+                                .deleteItem('hargaPerorang$waktu');
+                            await LocalStorage('dcroffle')
+                                .deleteItem('totalHarga$waktu');
+                            await LocalStorage('dcroffle')
+                                .deleteItem('totalJumlah$waktu');
+                            await LocalStorage('dcroffle')
                                 .setItem('topping$waktu', listsTopping);
                             await LocalStorage('dcroffle')
                                 .setItem('pelanggan$waktu', listPelanggan);
@@ -515,11 +624,12 @@ class _InputDataState extends State<InputData> {
                             if (listWaktu.contains(waktu) == false) {
                               listWaktu.add(waktu);
                               await LocalStorage('dcroffle')
+                                  .deleteItem('waktu');
+                              await LocalStorage('dcroffle')
                                   .setItem('waktu', listWaktu);
                             }
                             namaController.clear();
                             checked = [];
-                            setState(() {});
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -553,24 +663,28 @@ class _InputDataState extends State<InputData> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 10),
+                  FloatingActionButton(
+                    backgroundColor: Colors.red,
+                    splashColor: Colors.blue,
+                    tooltip: 'Tambah Menu',
+                    onPressed: () {
+                      setState(() {
+                        checked.add([]);
+                        jumlah.add(1);
+                        totalHargaSatuan.add(0);
+                        hargaSatuan.add(0);
+                        hargaDouble.add(0);
+                      });
+                    },
+                    child: const Icon(Icons.add),
+                  ),
                 ],
               ),
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.red,
-                splashColor: Colors.blue,
-                tooltip: 'Tambah Menu',
-                onPressed: () {
-                  setState(() {
-                    checked.add([]);
-                    jumlah.add(1);
-                    totalHargaSatuan.add(0);
-                    hargaSatuan.add(0);
-                  });
-                },
-                child: const Icon(Icons.add),
-              ),
             ),
-          );
-        });
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -83,6 +83,7 @@ class _MyHomePageState extends State<HomePage> {
 
           return listWaktu.isNotEmpty && listWaktu != []
               ? ListView(
+                  physics: const BouncingScrollPhysics(),
                   children: [
                     ListView.builder(
                       shrinkWrap: true,
