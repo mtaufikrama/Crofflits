@@ -3,7 +3,7 @@
    <application
         android:label="Crofflite"
         android:name="${applicationName}"
-        android:icon="@mipmap/icon_app">
+        android:icon="@mipmap/icon_application">
         <activity
             android:name=".MainActivity"
             android:exported="true"
