@@ -23,7 +23,7 @@ class _MyHomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'CROFFLITS',
+          'CROFFLITE',
           style: GoogleFonts.asap(),
         ),
         actions: [

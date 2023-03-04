@@ -1,0 +1,99 @@
+[
+    {
+        "total produk": 8,
+        "tanggal": "12/18/2022",
+        "total harga": 56000,
+        "data": [
+            {
+                "jumlah": 3,
+                "status": false,
+                "nama pelanggan": "Taufik",
+                "harga": 21000,
+                "produk": [
+                    {
+                        "topping": [
+                            "Coklat"
+                        ],
+                        "harga": 15000,
+                        "jumlah": 2
+                    },
+                    {
+                        "topping": [
+                            "Original"
+                        ],
+                        "harga": 6000,
+                        "jumlah": 1
+                    }
+                ]
+            },
+            {
+                "jumlah": 2,
+                "status": true,
+                "nama pelanggan": "Qwerty",
+                "harga": 12000,
+                "produk": [
+                    {
+                        "topping": [
+                            "Original"
+                        ],
+                        "harga": 6000,
+                        "jumlah": 1
+                    }
+                ]
+            },
+            {
+                "jumlah": 3,
+                "status": true,
+                "nama pelanggan": "Metir",
+                "harga": 23000,
+                "produk": [
+                    {
+                        "topping": [
+                            "Coklat"
+                        ],
+                        "harga": 15000,
+                        "jumlah": 2
+                    },
+                    {
+                        "topping": [
+                            "Cream Vanilla",
+                            "Coklat"
+                        ],
+                        "harga": 15000,
+                        "jumlah": 2
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "total produk": 2,
+        "tanggal": "11/12/2022",
+        "total harga": 12000,
+        "data": [
+            {
+                "jumlah": 2,
+                "status": false,
+                "nama pelanggan": "Taufik",
+                "harga": 12000,
+                "produk": [
+                    {
+                        "topping": [
+                            "Coklat",
+                            "Strawberry"
+                        ],
+                        "harga": 7000,
+                        "jumlah": 1
+                    },
+                    {
+                        "topping": [
+                            "Original"
+                        ],
+                        "harga": 5000,
+                        "jumlah": 1
+                    }
+                ]
+            }
+        ]
+    }
+]
